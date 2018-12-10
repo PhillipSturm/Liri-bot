@@ -37,33 +37,44 @@ inquirer
                      for (var i = 0; i < bandData.data.length; i++) {
                          
                          //  console.log(i, bandData.data[i].venue);
-                         console.log(i + 1, "The venue is " + bandData.data[i].venue.name + ". The venue location is " + bandData.data[i].venue.city + ". The date of the event is " + moment(bandData.data[i].datetime).format("MM/DD/YYYY"));
+                         console.log(i + 1, "The venue is " + bandData.data[i].venue.name +
+                             ". The venue location is " + bandData.data[i].venue.city +
+                             ". The date of the event is " +
+                             moment(bandData.data[i].datetime).format("MM/DD/YYYY"));
                      }
                 }
              )
             break;
-        case "spotify-this-song":
-        spotify.search({ type: "track", query: response.search, limit: 5 }, function(err, data) {
-            if (err) {
-              return console.log("Error occurred: " + err);
-            }
-           
-           console.log(data.tracks.items);
-           });
-        
+         case "spotify-this-song":
+         if (!response.search){response.search = "The Sign Ace of Base";}
+             spotify.search({ type: 'track', query: response.search }, function (err, data) {
+                var songSearch = data.tracks.items;
+             if (err){
+                 console.log('Error occurred: ' + err);
+                 return;
+             }
+         console.log(
+                     "\nArtist(s): " + songSearch[0].artists[0].name +
+                     "\n. Song Name: " + songSearch[0].name +
+                     "\n. External Link: " + songSearch[0].external_urls.spotify +
+                     "\n. Album: " + songSearch[0].album.name);
+                 
+             // Was having issues with the preview link not showing up with some songs, so I put in the external link to the song instead //
+     });
             break;
-        case "movie-this":
-        axios.get("http://www.omdbapi.com/?t=" + response.search + "&y=&plot=short&apikey=" + movie).then(
-            function (movieData) {
-                console.log("The movie's title is: " + movieData.data.Title);
-                console.log("The movie's release year is: " + movieData.data.Year);
-                console.log("The movie's IMDB rating is: " + movieData.data.imdbRating);
-                console.log("The movie's Rotten Tomatoes rating is: " + movieData.data.Ratings[1].Value);
-                console.log("The movie's country of origin is: " + movieData.data.Country);
-                console.log("The movie's language is: " + movieData.data.Language);
-                console.log("The movie's plot is: " + movieData.data.Plot);
-                console.log("The movie's cast is: " + movieData.data.Actors);
-
+         case "movie-this":
+         if (!response.search){response.search = "Mr. Nobody";}
+             axios.get("http://www.omdbapi.com/?t=" + response.search + "&y=&plot=short&apikey=" + movie).then(
+                 function (movieData) {
+                    var mvData = movieData.data;
+                console.log("The movie's title is: " + mvData.Title);
+                console.log("The movie's release year is: " + mvData.Year);
+                console.log("The movie's IMDB rating is: " + mvData.imdbRating);
+                console.log("The movie's Rotten Tomatoes rating is: " + mvData.Ratings[1].Value);
+                console.log("The movie's country of origin is: " + mvData.Country);
+                console.log("The movie's language is: " + mvData.Language);
+                console.log("The movie's plot is: " + mvData.Plot);
+                console.log("The movie's cast is: " + mvData.Actors);
             }
           )
             break;
