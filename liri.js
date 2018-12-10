@@ -26,6 +26,7 @@ function liri() {
             {
                 when: function (response) {
                     if (response.userChoice === "do-what-it-says") {
+                        // Need to grab the data from the txt file and plug it into the spotify-this-song selection //
 
                         fs.readFile("random.txt", "utf8", function (error, data) {
                             if (error) {
